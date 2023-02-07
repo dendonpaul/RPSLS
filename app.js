@@ -1,152 +1,152 @@
-function game(index) {
+//Toggle rules
+const rules = document.getElementById("rules");
+const rulesImage = document.getElementById("rules-image");
+const myGame = document.getElementById("my-game");
+const audio = document.getElementById("audio");
+const outputImage = document.querySelector(".output");
+const icons = document.querySelectorAll(".buttons button");
+const results = document.getElementById("results");
+const pScore = document.getElementById("p-score");
+const cScore = document.getElementById("c-score");
+let playerChoice = "";
+let computerChoice = "";
+let scoresp1c1 = [0, 0];
+const toggle = () => {
+  if (rulesImage.style.display === "none") {
+    rulesImage.style.display = "block";
+    myGame.style.display = "none";
+  } else {
+    rulesImage.style.display = "none";
+    myGame.style.display = "block";
+  }
+};
+rules.addEventListener("click", () => {
+  toggle();
+});
 
-    const rules = document.getElementById("rules");
-    const rulesImage = document.getElementById("rules-image");
-    const myGame = document.getElementById("my-game");
+//Make selected item as active.
+const active = icons.forEach((icon) => {
+  icon.addEventListener("click", (e) => {
+    icons.forEach((iconnew) => {
+      iconnew.classList.remove("active");
+      if (iconnew.id === icon.id) {
+        icon.classList.add("active");
+        playerChoice = icon.id;
+        audio.play();
+      }
+    });
+    //   //call computer player function
+    playComputer();
+  });
+});
+//Computer game function
+const playComputer = () => {
+  const icons = ["rock", "paper", "scissor", "spock", "lizard"];
+  const randomVal = Math.floor(Math.random() * 5);
+  outputImage.src = `./assets/${icons[randomVal]}.svg`;
+  computerChoice = icons[randomVal];
+  //compare icons
+  compareIcons();
+};
+//Compare Icons Functions
+const compareIcons = () => {
+  //check if tie
+  if (playerChoice === computerChoice) {
+    results.textContent = "It's a TIE";
+    return;
+  }
+  //Player gets rock
+  if (playerChoice === "rock") {
+    if (computerChoice === "scissor" || computerChoice === "lizard") {
+      results.textContent = "You Win!";
+      calculateScore(0);
+      return;
+    } else {
+      results.textContent = "Computer Wins!";
+      calculateScore(1);
+      return;
+    }
+  }
+  //   player gets paper
+  if (playerChoice === "paper") {
+    if (computerChoice === "scissor" || computerChoice === "lizard") {
+      results.textContent = "Computer Wins!";
+      calculateScore(1);
+      return;
+    } else {
+      results.textContent = "You Win!";
+      calculateScore(0);
+      return;
+    }
+  }
+  //   player gets Scissor
+  if (playerChoice === "scissor") {
+    if (computerChoice === "rock" || computerChoice === "spock") {
+      results.textContent = "Computer Wins!";
+      calculateScore(1);
+      return;
+    } else {
+      results.textContent = "You Win!";
+      calculateScore(0);
+      return;
+    }
+  }
+  //   player gets Spock
+  if (playerChoice === "spock") {
+    if (computerChoice === "paper" || computerChoice === "lizard") {
+      results.textContent = "Computer Wins!";
+      calculateScore(1);
+      return;
+    } else {
+      results.textContent = "You Win!";
+      calculateScore(0);
+      return;
+    }
+  }
+  //   player gets lizard
+  if (playerChoice === "lizard") {
+    if (computerChoice === "rock" || computerChoice === "scissor") {
+      results.textContent = "Computer Wins!";
+      calculateScore(1);
+      return;
+    } else {
+      results.textContent = "You Win!";
+      calculateScore(0);
+      return;
+    }
+  }
+};
+//calculate score function
+const calculateScore = (data) => {
+  if (data === 0) {
+    scoresp1c1[0] = scoresp1c1[0] + 1;
+  } else {
+    scoresp1c1[1] = scoresp1c1[1] + 1;
+  }
+  //call function to output score
+  scoreOutput();
+};
+//Score output function
+const scoreOutput = () => {
+  pScore.textContent = scoresp1c1[0];
+  cScore.textContent = scoresp1c1[1];
+  checkGameOver();
+};
 
-    const rulesToggle = () => {
-        if(rulesImage.style.display === "none") {
-            rulesImage.style.display = "block";
-            myGame.style.display = "none";
-        }
-        else{
-            rulesImage.style.display = "none";
-            myGame.style.display = "block";
-        }
+//check game over
+const checkGameOver = () => {
+  //   console.log(scoresp1c1[0], scoresp1c1[1]);
+  if (scoresp1c1[0] >= 10 || scoresp1c1[1] >= 10) {
+    document.querySelector("#btn-input").style.display = "none";
+    if (scoresp1c1[0] >= 10) {
+      document.getElementById("winner1").textContent = "Winner!";
+      document.getElementById("winner1").parentElement.style.backgroundColor =
+        "green";
     }
-    rules.addEventListener("click", rulesToggle);
-
-    //global variables 
-    const ROCK = "rock";
-    const PAPER = "paper";
-    const SCISSOR = "scissor";
-    const LIZARD = "lizard";
-    const SPOCK = "spock";
-
-    //function for producing input
-    function producingInput ()  {
-        let playerChoice = "";
-        const audio = document.getElementById("audio");
-        const inputButtons = document.querySelectorAll(".buttons button");
-        const active = (playerChoice) => {
-            inputButtons.forEach(inputs => {
-                if(inputs.id === playerChoice){
-                    inputs.classList.add("active");
-                }
-                else{
-                    inputs.classList.remove("active");
-                }
-            });
-        }
-        switch(index) {
-            case 0: playerChoice = ROCK;
-                        active(playerChoice);
-                        audio.play();
-                        break;
-            case 1: playerChoice = PAPER;
-                        active(playerChoice);
-                        audio.play();
-                        break;
-            case 2: playerChoice = SCISSOR;
-                        active(playerChoice);
-                        audio.play();
-                        break;
-            case 3: playerChoice = LIZARD;
-                        active(playerChoice);
-                        audio.play();
-                        break;
-            case 4: playerChoice = SPOCK;
-                        active(playerChoice);
-                        audio.play();
-                        break;
-        }
-        producingOutput();
-        comparison(playerChoice,computerChoice);
+    if (scoresp1c1[1] >= 10) {
+      document.getElementById("winner2").textContent = "Winner!";
+      document.getElementById("winner2").parentElement.style.backgroundColor =
+        "green";
     }
-
-    //function for producing output
-    const producingOutput = () =>{
-    const outputImage = document.querySelector(".output");
-    const randomSelection = Math.floor(Math.random() *5);
-    switch(randomSelection) {
-    case 0:
-        computerChoice = ROCK;
-        outputImage.src = `./assets/rock.svg`;
-        break;
-    case 1:
-        computerChoice = PAPER;
-        outputImage.src = `./assets/paper.svg`;
-        break;
-    case 2:
-        computerChoice = SCISSOR;
-        outputImage.src = `./assets/scissor.svg`;
-        break;
-    case 3: 
-        computerChoice = LIZARD;
-        outputImage.src = `./assets/lizard.svg`;
-        break;
-    case 4: 
-        computerChoice = SPOCK;
-        outputImage.src = `./assets/spock.svg`;
-        break;
-    }
-}
-
-    //function for comparison
-    function comparison(pChoice, cChoice) {
-    const result = document.getElementById("results")
-    //checks for draw
-    if(pChoice === cChoice) {
-        result.textContent = "It is a tie!";
-    }
-    //checks for rock
-    if(pChoice === ROCK) {
-        if(cChoice === PAPER || cChoice === SPOCK ) { 
-            result.textContent = "Computer wins!";
-        }
-        else if(cChoice === SCISSOR || cChoice === LIZARD) {
-            result.textContent = "You win!"; 
-            return; }
-    }
-    //checks for paper
-    if(pChoice === PAPER) {
-        if(cChoice === SCISSOR || cChoice === LIZARD ) {
-            result.textContent = "Computer wins!";
-        }
-        else if(cChoice === SPOCK || cChoice === ROCK) {
-            result.textContent = "You win!"; 
-            return; 
-        }
-    }
-    //checks for scissor
-    if(pChoice === SCISSOR) {
-        if(cChoice === ROCK || cChoice === SPOCK ) { 
-            result.textContent = "Computer wins!";
-        }
-        else if(cChoice === LIZARD || cChoice === PAPER) {
-            result.textContent = "You win!"; 
-            return; }
-    }
-    //checks for lizard
-    if(pChoice === LIZARD) {
-        if(cChoice === ROCK || cChoice === SCISSOR ) { 
-            result.textContent = "Computer wins!";
-        }
-        else if(cChoice === SPOCK || cChoice === PAPER) {
-            result.textContent = "You win!"; 
-            return; }
-    }
-    //checks for spock
-    if(pChoice === SPOCK) {
-        if(cChoice === PAPER || cChoice === LIZARD ) { 
-            result.textContent = "Computer wins!";
-        }
-        else if(cChoice === ROCK || cChoice === SCISSOR) {
-            result.textContent = "You win!"; 
-            return; 
-        }
-    }
-    }
-producingInput();
-}
-game();
+  }
+};
