@@ -3,11 +3,13 @@ const rules = document.getElementById("rules");
 const rulesImage = document.getElementById("rules-image");
 const myGame = document.getElementById("my-game");
 const audio = document.getElementById("audio");
+const audioS = document.getElementById("audioS");
 const outputImage = document.querySelector(".output");
 const icons = document.querySelectorAll(".buttons button");
 const results = document.getElementById("results");
 const pScore = document.getElementById("p-score");
 const cScore = document.getElementById("c-score");
+
 let playerChoice = "";
 let computerChoice = "";
 let scoresp1c1 = [0, 0];
@@ -138,6 +140,8 @@ const checkGameOver = () => {
   //   console.log(scoresp1c1[0], scoresp1c1[1]);
   if (scoresp1c1[0] >= 10 || scoresp1c1[1] >= 10) {
     document.querySelector("#btn-input").style.display = "none";
+    audioS.play();
+
     if (scoresp1c1[0] >= 10) {
       document.getElementById("winner1").textContent = "Winner!";
       document.getElementById("winner1").parentElement.style.backgroundColor =
